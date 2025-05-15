@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import DashboardLayout from "../layouts/DashboardLayout";
+
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -46,19 +48,13 @@ const Dashboard = () => {
     fetchProtectedData();
   }, [token,navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
-
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div>
+    <DashboardLayout>
       <h1>Dashboard</h1>
       <p>{message}</p>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
+    </DashboardLayout>
   );
 };
 
