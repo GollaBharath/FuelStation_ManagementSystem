@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { login } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,8 +22,7 @@ const Login = () => {
       const data = await res.json();
       if (!res.ok) return setError(data.error || "Login failed");
 
-      localStorage.setItem("token", data.token);
-      
+      login(data.token);   
       navigate("/dashboard");
     } catch (err) {
       setError("Login failed");

@@ -1,28 +1,32 @@
-import './assets/styles/App.css';
+// src/App.tsx
+import { Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-
   return (
     <>
-    
-      <div className="text-center">
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-extrabold text-white mb-6 font-[Poppins] tracking-tight">
-            SRIKISHNA
-        </h1>
-        
-        <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-8 uppercase font-[Poppins] tracking-wider">
-            FILLING STATION
-        </h2>
-        <div className="flex justify-center space-x-8 mb-12">
-            <div className="w-16 h-1 bg-white opacity-60 mt-4"></div>
-            <div className="w-16 h-1 bg-white opacity-60 mt-4"></div>
-        </div>
-        <p className="text-xl text-white opacity-90 max-w-2xl mx-auto font-[Poppins]">
-            Premium fuel services since 2019 • 24/7 availability
-        </p>
-    </div>
+      <Navbar />
+      <main className="pt-16">
+        <Routes>
+          <Route path="/" element={<Dashboard />} errorElement={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+          path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </main>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
