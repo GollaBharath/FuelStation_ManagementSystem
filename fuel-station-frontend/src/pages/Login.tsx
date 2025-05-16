@@ -20,6 +20,7 @@ const Login = () => {
       });
 
       const data = await res.json();
+      
       if (!res.ok) return setError(data.error || "Login failed");
 
       login(data.token);   

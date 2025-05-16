@@ -23,6 +23,14 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/admin-settings"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
     </>

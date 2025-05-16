@@ -1,1 +1,12 @@
 @import "tailwindcss";
+/* src/index.css or wherever your global styles are */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #7e22ce; /* Tailwind's purple-700 */
+  border-radius: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background-color: #581c87; /* Tailwind's purple-900 */
+}

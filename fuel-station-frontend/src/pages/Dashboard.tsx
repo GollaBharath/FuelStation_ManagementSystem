@@ -10,7 +10,6 @@ const Dashboard = () => {
 
   const token = localStorage.getItem("token");
 
-  console.log(token);
   
   useEffect(() => {
     // Redirect to login if no token

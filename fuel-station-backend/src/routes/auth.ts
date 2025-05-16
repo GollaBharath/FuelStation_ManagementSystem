@@ -1,3 +1,4 @@
+
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -12,7 +13,7 @@ router.post("/register", async (req , res) => {
   const { username, password } = req.body;
   try {
     const hashed = await bcrypt.hash(password, 10);
-    const user = await User.create({ username, password: hashed });
+    const user = await User.create({ username, password: hashed, role: "user" });
     res.status(201).json({ message: "User created", user: user.username });
   } catch (err) {
     console.log(err);
@@ -30,10 +31,12 @@ router.post("/login", async (req : Request, res : Response):Promise<any> => {
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(401).json({ error: "Invalid Password" });
 
-  const token = jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, {
-    expiresIn: "1d",
-  });
-
+  const token = jwt.sign(
+    { id: user._id, username: user.username, role: user.role }, 
+    JWT_SECRET, 
+    {expiresIn: "1d",}
+  );
+  
   res.json({ token });
 });
 router.get("/ping", (req, res) => {

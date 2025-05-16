@@ -1,29 +1,47 @@
-import { useEffect, useState } from "react";
-import type { ReactNode } from "react";
-import { AuthContext, type AuthContextType } from "./AuthContext";
+import { useEffect, useState, type ReactNode } from "react";
+import { AuthContext, type UserRole } from "./AuthContext";
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem("token"));
+
+interface Props {
+  children: ReactNode;
+}
+
+export const AuthProvider = ({ children }: Props) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole] = useState<UserRole>(null);
+
+  const decodeAndSetAuth = (token: string) => {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      setRole(payload.role ?? "user");
+      setIsLoggedIn(true);
+    } catch (err) {
+      console.log(err);
+      logout();
+    }
+  };
 
   const login = (token: string) => {
     localStorage.setItem("token", token);
-    setIsLoggedIn(true);
+    decodeAndSetAuth(token);
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
+    setRole(null);
   };
 
   useEffect(() => {
-    const syncLoginState = () => {
-      setIsLoggedIn(!!localStorage.getItem("token"));
-    };
-    window.addEventListener("storage", syncLoginState);
-    return () => window.removeEventListener("storage", syncLoginState);
-  }, []);
+    const token = localStorage.getItem("token");
+    if (token) {
+      decodeAndSetAuth(token);
+    }
+  });
 
-  const contextValue: AuthContextType = { isLoggedIn, login, logout };
-
-  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, role, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
